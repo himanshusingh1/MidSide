@@ -7,9 +7,9 @@
 //
 
 import UIKit
-
+import AudioKit
 class ViewController: UIViewController {
-
+    let ap = AudioPlayer()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -19,7 +19,10 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    @IBAction func didTapPlay(_ sender: Any) {
+       ap.loadSong()
+    }
+    
 }
 
