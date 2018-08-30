@@ -9,25 +9,28 @@
 import UIKit
 import AVKit
 
-class playingLayer: NSObject ,nodeDelegates{
-    func didStop() {
-        stop()
-    }
+class playingLayer: NSObject {
+
     
-   
     private var engine: AVAudioEngine!
-    private var tone: SongUnit!
+    private var song: SongUnit!
     static let shared = playingLayer()
     
+    func setSong(_ withUrl:URL){
+        
+        song = SongUnit()
+        song.setSong(withUrl)
+        initilizeEngine()
+        play()
+    }
     
-    func makeSong(){
-        tone = SongUnit()
-        let format = AVAudioFormat(standardFormatWithSampleRate: tone.sampleRate, channels: 2)
+    private func initilizeEngine(){
+        let format = AVAudioFormat(standardFormatWithSampleRate: song.sampleRate, channels: 2)
         print(format?.sampleRate ?? "format nil")
         engine = AVAudioEngine()
-        engine.attach(tone)
+        engine.attach(song)
         let mixer = engine.mainMixerNode
-        engine.connect(tone, to: mixer, format: format)
+        engine.connect(song, to: mixer, format: format)
         do {
             try engine.start()
         } catch let error as NSError {
@@ -36,31 +39,38 @@ class playingLayer: NSObject ,nodeDelegates{
     }
     
     func togglePlayPause(){
-        if tone.isPlaying {
-            engine.mainMixerNode.volume = 0.0
-            tone.stop()
-            engine.reset()
+        if song.isPlaying {
+            stop()
         } else {
-            tone.preparePlaying()
-            tone.play()
-            engine.mainMixerNode.volume = 1.0
+            play()
         }
     }
     
     func play(){
-        tone.preparePlaying()
-        tone.play()
+        song.preparePlaying()
+        song.play()
         engine.mainMixerNode.volume = 1.0
     }
     
     func pause(){
         engine.mainMixerNode.volume = 0.0
-        tone.pause()
+        song.pause()
     }
     
     func stop(){
         engine.mainMixerNode.volume = 0.0
-        tone.stop()
+        song.stop()
         engine.reset()
     }
+    
+    func seekToTime(_ percent:Double){
+        stop()
+        song.seekToTime(percent)
+        play()
+    }
+    
+    func setProcessingMechanism(_ method:processingMethod){
+        song.processingMethodology = method
+    }
+    
 }

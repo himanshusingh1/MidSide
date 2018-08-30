@@ -8,16 +8,24 @@
 
 import Foundation
 import AVFoundation
+
 protocol nodeDelegates {
-    func didStop()
+    func ReachedEnd()
 }
+
+enum processingMethod{
+    case none,leftSolo,rightSolo,midSolo,sideSolo,swapLeftRightChannel
+}
+
 class SongUnit: AVAudioPlayerNode {
     var delegate:nodeDelegates?
+    var processingMethodology:processingMethod = .none
     var bufferCapacity: AVAudioFrameCount {
         get{
             return (AVAudioFrameCount((file?.sampleRate)!))
         }
     }
+    
     var sampleRate: Double{
         get{
             return (file?.sampleRate)!
@@ -30,17 +38,32 @@ class SongUnit: AVAudioPlayerNode {
         }
     }
    
+    var currentTime:Double{
+        get{
+            return Double((file?.framePosition)!)/(file?.sampleRate)!
+        }
+    }
+    
+    var totalDuration:Double{
+        get{
+            return (file?.duration)!
+        }
+    }
+    
     private var audioFormat: AVAudioFormat{
         get{
             return AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: AVAudioChannelCount(channelCount))!
         }
     }
+    
     private var file : AVAudioFile?
-    override init() {
-        super.init()
-        let fileurl = Bundle.main.path(forResource: "LR", ofType: ".mp3")
-        let url = URL(fileURLWithPath:fileurl!)
-        file = try! AVAudioFile(forReading: url)
+
+    func setSong(_ withUrl:URL){
+        do{
+            file = try AVAudioFile(forReading: withUrl)
+        }catch{
+            print("Something Went Wrong")
+        }
     }
     
     func prepareBuffer() -> AVAudioPCMBuffer {
@@ -69,20 +92,37 @@ class SongUnit: AVAudioPlayerNode {
         scheduleBuffer()
     }
     
+    
+    func seekToTime(_ percentage:Double){
+       
+        file?.framePosition =  AVAudioFramePosition(( (file?.duration)! * percentage )*(file?.sampleRate)!)
+
+    }
+    
     //MARK:= processing block
     private func doProcessing(_ buffer: AVAudioPCMBuffer){
         do{
         try file?.read(into: buffer)
         }catch{
-            delegate?.didStop()
+            delegate?.ReachedEnd()
             return;
         }
         let left = buffer.floatChannelData?[0]
         let right = buffer.floatChannelData?[1]
-//        swapLeftRightChannel(left: left, right: right )
-        leftMonoChannel(left: left, right: right)
-//        midSolo(left: left, right: right, bufferCapacity: numberFrames)
-//        sideSolo(left: left, right: right, bufferCapacity: numberFrames)
+        switch processingMethodology {
+        case .leftSolo:
+            leftMonoChannel(left: left, right: right)
+        case .rightSolo:
+            rightMonoChannel(left: left, right: right)
+        case .midSolo:
+            midSolo(left: left, right: right)
+        case .sideSolo:
+            sideSolo(left: left, right: right)
+        case .swapLeftRightChannel:
+            swapLeftRightChannel(left: left, right: right )
+        default:
+            print("none")
+        }
         buffer.frameLength = bufferCapacity
     }
     
@@ -127,4 +167,5 @@ class SongUnit: AVAudioPlayerNode {
         }
     }
     
+
 }
