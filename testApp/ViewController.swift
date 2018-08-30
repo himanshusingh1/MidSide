@@ -7,12 +7,15 @@
 //
 
 import UIKit
-import AudioKit
+import AVKit
+
 class ViewController: UIViewController {
-    let ap = AudioPlayer()
+
+    let pl = playingLayer.shared
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+    pl.makeSong()
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,7 +24,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didTapPlay(_ sender: Any) {
-       ap.loadSong()
+        pl.togglePlayPause()
     }
     
 }

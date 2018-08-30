@@ -2,6 +2,6 @@
 # platform :ios, '9.0'
 
 target 'testApp' do
-pod 'AudioKit'
+    #pod 'AudioKit'
 
 end
