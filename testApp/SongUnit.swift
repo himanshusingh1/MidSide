@@ -1,9 +1,9 @@
 //
 //  AVTonePlayerUnit.swift
-//  ToneGenerator
+//  testApp
 //
-//  Created by OOPer in cooperation with shlab.jp, on 2015/3/22.
-//  See LICENSE.txt .
+//  Created by Himanshu on 30/08/18.
+//  Copyright © 2018 craterZone. All rights reserved.
 //
 
 import Foundation
@@ -18,6 +18,7 @@ enum processingMethod{
 }
 
 class SongUnit: AVAudioPlayerNode {
+    
     var delegate:nodeDelegates?
     var processingMethodology:processingMethod = .none
     var bufferCapacity: AVAudioFrameCount {
@@ -58,14 +59,7 @@ class SongUnit: AVAudioPlayerNode {
     
     private var file : AVAudioFile?
 
-    func setSong(_ withUrl:URL){
-        do{
-            file = try AVAudioFile(forReading: withUrl)
-        }catch{
-            print("Something Went Wrong")
-        }
-    }
-    
+  
     func prepareBuffer() -> AVAudioPCMBuffer {
         let buffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: bufferCapacity)!
         fillBuffer(buffer)
@@ -92,6 +86,14 @@ class SongUnit: AVAudioPlayerNode {
         scheduleBuffer()
     }
     
+    func setSong(_ withUrl:URL){
+        do{
+            file = try AVAudioFile(forReading: withUrl)
+        }catch{
+            print("Something Went Wrong")
+        }
+    }
+    
     
     func seekToTime(_ percentage:Double){
        
@@ -99,7 +101,8 @@ class SongUnit: AVAudioPlayerNode {
 
     }
     
-    //MARK:= processing block
+    
+    //MARK:= processing blocks
     private func doProcessing(_ buffer: AVAudioPCMBuffer){
         do{
         try file?.read(into: buffer)

@@ -34,6 +34,7 @@
 		A3E9D2D82137CC5E00283621 /* SongUnit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongUnit.swift; sourceTree = "<group>"; };
 		A3E9D2DA2137E45100283621 /* HSAudioFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSAudioFile.swift; sourceTree = "<group>"; };
 		A3E9D2DE2137EDA300283621 /* playingLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = playingLayer.swift; sourceTree = "<group>"; };
+		A3E9D2E02138234000283621 /* testApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = testApp.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 		A30E4F2B212AA8A700A195AC /* testApp */ = {
 			isa = PBXGroup;
 			children = (
+				A3E9D2E02138234000283621 /* testApp.entitlements */,
 				A3E9D2DE2137EDA300283621 /* playingLayer.swift */,
 				A3E9D2D82137CC5E00283621 /* SongUnit.swift */,
 				A30E4F2C212AA8A700A195AC /* AppDelegate.swift */,
@@ -116,6 +118,9 @@
 						CreatedOnToolsVersion = 9.4.1;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.iCloud = {
 								enabled = 1;
 							};
 						};
@@ -309,6 +314,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = testApp/testApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U3KJ64UT82;
 				INFOPLIST_FILE = testApp/Info.plist;
@@ -328,6 +334,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = testApp/testApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = U3KJ64UT82;
 				INFOPLIST_FILE = testApp/Info.plist;

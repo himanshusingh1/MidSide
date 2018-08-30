@@ -11,19 +11,18 @@ import AVKit
 
 class playingLayer: NSObject {
 
-    
     private var engine: AVAudioEngine!
     private var song: SongUnit!
     static let shared = playingLayer()
     
     func setSong(_ withUrl:URL){
-        
         song = SongUnit()
         song.setSong(withUrl)
         initilizeEngine()
         play()
     }
     
+
     private func initilizeEngine(){
         let format = AVAudioFormat(standardFormatWithSampleRate: song.sampleRate, channels: 2)
         print(format?.sampleRate ?? "format nil")
@@ -71,6 +70,11 @@ class playingLayer: NSObject {
     
     func setProcessingMechanism(_ method:processingMethod){
         song.processingMethodology = method
+    }
+    
+   @objc func progressUpdate(){
+        print("XHC playing song at ",song.currentTime)
+        print("XHC totalDuration of song ",song.totalDuration)
     }
     
 }

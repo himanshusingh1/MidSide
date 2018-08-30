@@ -10,6 +10,8 @@ import UIKit
 import AVKit
 import MediaPlayer
 class ViewController: UIViewController {
+  
+    
     @IBOutlet weak var slider: UISlider!
     var currenttrack = 0;
     let pl = playingLayer.shared
@@ -31,7 +33,10 @@ class ViewController: UIViewController {
                     }
                 }
             }
-        
+        let importMenu = UIDocumentMenuViewController(documentTypes: ["public.audio"], in: .import)
+        importMenu.delegate = self
+        importMenu.modalPresentationStyle = .formSheet
+        self.present(importMenu, animated: true, completion: nil)
         pl.setSong((mediaItems?[0].assetURL!)!)
     }
 
@@ -62,6 +67,29 @@ class ViewController: UIViewController {
             pl.setSong((mediaItems?[currenttrack].assetURL!)!)
         }
 
+    }
+}
+extension ViewController: UIDocumentMenuDelegate,UIDocumentPickerDelegate,UINavigationControllerDelegate {
+    
+    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+       
+        let myURL = url as URL
+        print("import result : \(myURL)")
+        pl.setSong(myURL)
+        
+        
+    }
+    
+    
+    public func documentMenu(_ documentMenu:UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
+        documentPicker.delegate = self
+        present(documentPicker, animated: true, completion: nil)
+    }
+    
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        print("view was cancelled")
+        dismiss(animated: true, completion: nil)
     }
 }
 
