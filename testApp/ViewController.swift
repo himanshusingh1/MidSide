@@ -35,9 +35,16 @@ class ViewController: UIViewController {
             }
         let importMenu = UIDocumentMenuViewController(documentTypes: ["public.audio"], in: .import)
         importMenu.delegate = self
-        importMenu.modalPresentationStyle = .formSheet
+        importMenu.modalPresentationStyle = .overFullScreen
         self.present(importMenu, animated: true, completion: nil)
-        pl.setSong((mediaItems?[0].assetURL!)!)
+//        pl.setSong((mediaItems?[0].assetURL!)!)
+        
+//        let pickerController = MPMediaPickerController(mediaTypes: .music)
+//        pickerController.prompt = NSLocalizedString("Add pieces to queue", comment:"");
+//        pickerController.allowsPickingMultipleItems=true;
+//        pickerController.delegate = self
+//        self.present(pickerController, animated: true, completion: nil)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,14 +64,14 @@ class ViewController: UIViewController {
         if currenttrack > 0{
         pl.setProcessingMechanism(.swapLeftRightChannel)
         currenttrack = currenttrack - 1
-            pl.setSong((mediaItems?[currenttrack].assetURL!)!)
+            pl.setNewSong((mediaItems?[currenttrack].assetURL!)!)
         }
         
     }
     @IBAction func next(_ sender: Any) {
-        if currenttrack < (mediaItems?.count)!{
+        if currenttrack+1 < (mediaItems?.count)!{
             currenttrack = currenttrack + 1
-            pl.setSong((mediaItems?[currenttrack].assetURL!)!)
+            pl.setNewSong((mediaItems?[currenttrack].assetURL!)!)
         }
 
     }
@@ -75,7 +82,7 @@ extension ViewController: UIDocumentMenuDelegate,UIDocumentPickerDelegate,UINavi
        
         let myURL = url as URL
         print("import result : \(myURL)")
-        pl.setSong(myURL)
+        pl.setNewSong(myURL)
         
         
     }
@@ -92,4 +99,10 @@ extension ViewController: UIDocumentMenuDelegate,UIDocumentPickerDelegate,UINavi
         dismiss(animated: true, completion: nil)
     }
 }
-
+extension ViewController:MPMediaPickerControllerDelegate{
+    func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
+       let url = mediaItemCollection.items[0].assetURL!
+        pl.setNewSong(url)
+        mediaPicker.dismiss(animated: true, completion: nil)
+    }
+}

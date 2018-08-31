@@ -15,8 +15,10 @@ class playingLayer: NSObject {
     private var song: SongUnit!
     static let shared = playingLayer()
     
-    func setSong(_ withUrl:URL){
+    
+    func setNewSong(_ withUrl:URL){
         song = SongUnit()
+        song.delegate = self
         song.setSong(withUrl)
         initilizeEngine()
         play()
@@ -38,7 +40,11 @@ class playingLayer: NSObject {
     }
     
     func togglePlayPause(){
-        if song.isPlaying {
+        guard let playingSong = song else {
+            print("Cannot Play or pause song because it is nil")
+            return
+        }
+        if playingSong.isPlaying {
             stop()
         } else {
             play()
@@ -77,4 +83,15 @@ class playingLayer: NSObject {
         print("XHC totalDuration of song ",song.totalDuration)
     }
     
+}
+
+extension playingLayer:nodeDelegates{
+    func ReachedEnd() {
+        print("END")
+    }
+    
+    func ErrorOccured() {
+        print("EROOR")
+        stop()
+    }
 }

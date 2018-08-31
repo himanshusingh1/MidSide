@@ -11,6 +11,7 @@ import AVFoundation
 
 protocol nodeDelegates {
     func ReachedEnd()
+    func ErrorOccured()
 }
 
 enum processingMethod{
@@ -91,6 +92,7 @@ class SongUnit: AVAudioPlayerNode {
             file = try AVAudioFile(forReading: withUrl)
         }catch{
             print("Something Went Wrong")
+            delegate?.ErrorOccured()
         }
     }
     
